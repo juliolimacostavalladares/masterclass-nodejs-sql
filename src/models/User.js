@@ -1,19 +1,31 @@
 const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../database');
+const bcrypt = require('bcryptjs');
 
-class User extends Model {
-  static init(sequelize) {
-    super.init({
-      name: DataTypes.STRING,
-      email: DataTypes.STRING,
-    }, {
-      sequelize
-    })
-  }
 
-  static associate(models) {
-    this.hasMany(models.Address, { foreignKey: 'user_id', as: 'addresses' });
-    this.belongsToMany(models.Tech, { foreignKey: 'user_id', through: 'user_techs', as: 'techs' });
-  }
-}
+class User extends Model {}
+
+User.init({
+  name: DataTypes.STRING,
+  email:  DataTypes.STRING,
+  password:  DataTypes.STRING
+}, {
+
+  sequelize, 
+  modelName: 'User'
+});
+
+User.beforeCreate(async (user, options) => {
+  return bcrypt.hash(user.password, 10)
+        .then(hash => {
+            user.password = hash;
+        })
+        .catch(err => { 
+            throw new Error(); 
+        });
+});
+
+
+console.log(User === sequelize.models.User);
 
 module.exports = User;

@@ -1,11 +1,11 @@
 module.exports = {
-  dialect: 'postgres',
+  dialect: 'mysql',
   host: 'localhost',
-  username: 'docker',
-  password: 'docker',
+  username: 'root',
+  password: '',
   database: 'sqlnode',
   define: {
     timestamps: true,
     underscored: true,
-  },
+  }
 };
